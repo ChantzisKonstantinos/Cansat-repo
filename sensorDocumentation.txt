@@ -1,0 +1,17 @@
+camera - raspberry camera module 3: picamera2 
+    (official)https://pip-assets.raspberrypi.com/categories/652-raspberry-pi-camera-module-2/documents/RP-008156-DS-2-picamera2-manual.pdf?disposition=inline
+    (unofficial)https://docs.arducam.com/Raspberry-Pi-Camera/Native-camera/PiCamera2-User-Guide/#step-3-basic-usage-reference
+    (Examples)https://github.com/raspberrypi/picamera2/tree/main/examples
+
+radio - RF4463pro + Antenna Si4463
+
+
+rbgSensor -TCS34725
+
+
+atmospheric pressure - BME280
+
+
+IMU - MPU-9250
+
+

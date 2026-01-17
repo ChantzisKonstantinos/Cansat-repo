@@ -17,8 +17,8 @@ def StopCamera():
     cam.stop()
 
 
-def CapturePhoto():
+def CapturePhoto(picName):
     image = cam.capture_array()
     img = Image.fromarray(image)
-    img.save("Capture.jpg", format="JPEG")
+    img.save(picName, format="JPEG")
 

@@ -6,10 +6,19 @@ import numpy as np
 from PIL import Image
 from torchvision import transforms
 import os
-import time 
-ConfigureCamera()
-StartCamera(1)
-picName = "Marios.jpg"
+import time
+
+eurosatClases = ["AnnualCrop",
+"Forest",
+"HerbaceousVegatation",
+"Highway",
+"Industrial",
+"Pasture",
+"PermanentCrop",
+"Residential",
+"River",
+"SeaLake"]
+
 class CNN(nn.Module):
   def __init__(self, inChannels, numClasses):
     super(CNN, self).__init__()
@@ -37,7 +46,7 @@ model = CNN(inChannels = 3, numClasses = 10).to(device)
 model.load_state_dict(torch.load(model_path, map_location=device))
 model.eval()
 
-start = time.time()
+#start = time.time()
 transform = transforms.Compose([
     transforms.Resize((64, 64)),
     transforms.ToTensor(),
@@ -46,31 +55,23 @@ transform = transforms.Compose([
         std=[0.5]
     )
 ])
-end = time.time()
+#end = time.time()
 
-CapturePhoto(picName)
-img = Image.open(picName).convert("RGB")
-img_tensor = transform(img).unsqueeze(0)
-
-eurosatClases = ["AnnualCrop",
-"Forest",
-"HerbaceousVegatation",
-"Highway",
-"Industrial",
-"Pasture",
-"PermanentCrop",
-"Residential",
-"River",
-"SeaLake"]
+def ClassifyTile(tilePath):
+    img = Image.open(tilePath).convert("RGB")
+    img_tensor = transform(img).unsqueeze(0)
+    with torch.no_grad():
+        output = model(img_tensor)
+        probs = torch.softmax(output, dim=1)
+        confidence, prediction = torch.max(probs, dim=1)
+    return prediction, confidence
 
 
-with torch.no_grad():
-    output = model(img_tensor)
-    probs = torch.softmax(output, dim=1)
-    conf, pred = torch.max(probs, dim=1)
 
 
-inference = (end- start)
+
+#inference = (end- start)
 print("Predicted class:", eurosatClases[pred.item()])
 print("Confidence:", float(conf))
-print(inference)
+#print(inference)
+

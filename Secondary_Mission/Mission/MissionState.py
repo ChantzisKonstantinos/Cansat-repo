@@ -1,4 +1,4 @@
-from Sensor import GetSensorData
+from Secondary_Mission.Sensor import GetSensorData
 from enum import IntEnum
 
 class State(IntEnum):

@@ -3,18 +3,14 @@ import board
 import busio
 from adafruit_bme280 import basic as adafruit_bme280
 
-i2c = busio.I2C(board.SCL, board.SDA)
-bme = adafruit_bme280.Adafruit_BME280_I2C(i2c, address=0x76)
-
-groundAltitude = 1013.25
-readRate = 0.5
-
-def GetSensorData():
-        altitude = 44330*(1-(bme.pressure/groundAltitude)**0.1903)
-        temperature = bme.temperature
-        humidity = bme.humidity
-        pressure = bme.pressure
-        return altitude, temperature, humidity, pressure
+class BMEReader:
+    def __init__(self, address=0x76):
+        self.i2c = busio.I2C(board.SCL, board.SDA)
+        self.bme = adafruit_bme280.Adafruit_BME280_I2C(self.i2c, address=address)
+        self.groundAltitude = 1013.25
+    def ReadSensorData(self):
+        self.altitude = 44330*(1-(self.bme.pressure/self.groundAltitude)**0.1903)
+        return altitude, self.bme.temperature, self.bme.humidity, self.bme.pressure
 """try:
     while True:
         print("Temperature: {:.3f} °C".format(bme.temperature))

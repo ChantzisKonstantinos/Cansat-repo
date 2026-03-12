@@ -1,2 +1,2 @@
-from .BMEReader import GetSensorData
+from .BMEReader import BMEReader
 print("Initialized Sensor Package")

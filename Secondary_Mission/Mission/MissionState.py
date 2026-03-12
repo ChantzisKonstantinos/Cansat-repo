@@ -1,4 +1,4 @@
-from Secondary_Mission.Sensor import GetSensorData
+from Secondary_Mission.Sensor import BMEReader
 from enum import IntEnum
 
 class State(IntEnum):
@@ -8,14 +8,14 @@ class State(IntEnum):
     MISSIONEND = 3
  
 CurrentState = State.IDLE
-altitude, temperature, humidity, pressure = GetSensorData()
+# altitude, temperature, humidity, pressure = GetSensorData()
 
-def GetState():
-    global CurrentState
-    if(altitude <= 200):
-        CurrentState = State.DESCENT
-    elif(altitude<=20): #or landing dected by imu
-        CurrentState = State.MISSIONEND
-    else:
-        CurrentState = State.DESCENT
-    return CurrentState
+# def GetState():
+#     global CurrentState
+#     if(altitude <= 200):
+#         CurrentState = State.DESCENT
+#     elif(altitude<=20): #or landing dected by imu
+#         CurrentState = State.MISSIONEND
+#     else:
+#         CurrentState = State.DESCENT
+#     return CurrentState

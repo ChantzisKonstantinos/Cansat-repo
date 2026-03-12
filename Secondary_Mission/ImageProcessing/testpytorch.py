@@ -64,14 +64,14 @@ def ClassifyTile(tilePath):
         output = model(img_tensor)
         probs = torch.softmax(output, dim=1)
         confidence, prediction = torch.max(probs, dim=1)
-    return prediction, confidence
+    return eurosatClases[prediction.item()], float(confidence)
 
 
 
 
 
 #inference = (end- start)
-print("Predicted class:", eurosatClases[pred.item()])
-print("Confidence:", float(conf))
+# print("Predicted class:", eurosatClases[pred.item()])
+# print("Confidence:", float(conf))
 #print(inference)
 

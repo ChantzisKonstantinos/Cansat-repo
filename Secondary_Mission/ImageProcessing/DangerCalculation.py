@@ -33,7 +33,7 @@ def CalculateDanger(classes):
     finalHazards = []
     columns = len(rawHazards[0])
     rows = len(rawHazards)
-    print(columns,rows)
+    # print(columns,rows)
     for r in range(rows):
         for c in range(columns):
             neighbours = []
@@ -43,16 +43,16 @@ def CalculateDanger(classes):
                 nRow, nColumn = dRow + r,dColumn + c
                 if(nRow>=0 and nRow<rows) and (nColumn>=0 and nColumn<columns):
                     neighbours.append(rawHazards[nRow][nColumn])
-            print(neighbours, r, c)
+            # print(neighbours, r, c)
             for n in range(len(neighbours)):
                 sum += neighbours[n]
             mean = sum/len(neighbours)
             finalHazard = rawHazards[r][c] * 0.5 + mean * 0.5 
             finalHazard = round(finalHazard,4)
-            print(f"raw hazard {rawHazards[r][c]} final hazard {finalHazard}")
+            # print(f"raw hazard {rawHazards[r][c]} final hazard {finalHazard}")
             finalHazards.append(finalHazard)
             neighbours.clear()
-    print(rawHazards)
+    # print(rawHazards)
     return(finalHazards)
 
 test1 = [
@@ -61,4 +61,4 @@ test1 = [
     5,0,2,1,
     7,8,9,3,
     ]
-print(CalculateDanger(test1))
+# print(CalculateDanger(test1))

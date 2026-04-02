@@ -19,7 +19,7 @@ def split_into_tiles(img, tiles=4):
 
 
 # load image (example)
-img = cv2.imread("angel.jpg")
+img = cv2.imread("1.png")
 
 # convert BGR -> RGB for matplotlib
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)

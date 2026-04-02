@@ -9,8 +9,10 @@ class BMEReader:
         self.bme = adafruit_bme280.Adafruit_BME280_I2C(self.i2c, address=address)
         self.groundAltitude = 1013.25
     def ReadSensorData(self):
-        self.altitude = 44330*(1-(self.bme.pressure/self.groundAltitude)**0.1903)
-        return altitude, self.bme.temperature, self.bme.humidity, self.bme.pressure
+        altitude = 44330*(1-(self.bme.pressure/self.groundAltitude)**0.1903)
+        msg = f"Altitude: {altitude:.2f} m\nTemperature: {self.bme.temperature:.2f} °C\nHumidity: {self.bme.humidity:.2f} %\nPressure: {self.bme.pressure:.2f} hPa"
+        return msg
+    
 """try:
     while True:
         print("Temperature: {:.3f} °C".format(bme.temperature))

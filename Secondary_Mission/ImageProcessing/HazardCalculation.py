@@ -27,11 +27,6 @@ class CNN(nn.Module):
     x = self.fc2(x)
     return x
 
-# script_dir = os.path.dirname(__file__)
-# model_path = os.path.join(script_dir, "model.pth")
-# model = CNN(inChannels = 3, numClasses = 10).to("cpu")
-# model.load_state_dict(torch.load(model_path, map_location="cpu"))
-# model.eval()
 
 class VisionSystem:
     def __init__(self, model_path):
@@ -42,21 +37,42 @@ class VisionSystem:
             transforms.Resize((64, 64)),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.5],std=[0.5])])
+        self.eurosatDangers = [
+            0.2,#AnnualCrop
+            0.6,#Forest
+            0.3,#HerbaceousVegatation
+            0.7,#Highway
+            0.6,#Industrial
+            0.5,#Pasture
+            0.3,#PermanentCrop
+            0.5,#Residential
+            0.8,#River
+            0.85,#SeaLake
+            ]
+
+        self.directions = [
+                (0,1),
+                (0,-1),
+                (1,0),
+                (-1,0),
+                (1,1),
+                (-1,-1),
+                (1,-1),
+                (-1,1)
+            ]
+
     def SplitImage(self, img):
         h, w, _ = img.shape
         th = h // 4
         tw = w // 4
-
         tiles = []
-
         for i in range(4):
             for j in range(4):
-
                 tiles.append(
                     img[i*th:(i+1)*th, j*tw:(j+1)*tw]
                 )
-
         return tiles
+
     def PreprocessImage(self,imgArray):
         tiles = self.SplitImage(imgArray)
         tensorList = []
@@ -66,6 +82,7 @@ class VisionSystem:
             tensorList.append(tensor)
         batch = torch.stack(tensorList).to("cpu")
         return batch
+    
     def ProcessImage(self,imgArray):
         batch = self.PreprocessImage(imgArray)
         with torch.no_grad():
@@ -73,4 +90,33 @@ class VisionSystem:
             predictions = torch.argmax(outputs, dim=1)
             classes = predictions.tolist()
         return classes
+    
+    def CalculateDanger(self,classes):
+        rawHazards = [
+        [self.eurosatDangers[classes[0]],self.eurosatDangers[classes[1]],self.eurosatDangers[classes[2]],self.eurosatDangers[classes[3]]],
+        [self.eurosatDangers[classes[4]],self.eurosatDangers[classes[5]],self.eurosatDangers[classes[6]],self.eurosatDangers[classes[7]]],
+        [self.eurosatDangers[classes[8]],self.eurosatDangers[classes[9]],self.eurosatDangers[classes[10]],self.eurosatDangers[classes[11]]],
+        [self.eurosatDangers[classes[12]],self.eurosatDangers[classes[13]],self.eurosatDangers[classes[14]],self.eurosatDangers[classes[15]]],
+        ]
+        finalHazards = []
+        columns = len(rawHazards[0])
+        rows = len(rawHazards)
+        for r in range(rows):
+            for c in range(columns):
+                neighbours = []
+                sum = 0
+                mean = 0
+                for dColumn, dRow in self.directions:
+                    nRow, nColumn = dRow + r,dColumn + c
+                    if(nRow>=0 and nRow<rows) and (nColumn>=0 and nColumn<columns):
+                        neighbours.append(rawHazards[nRow][nColumn])
+                for n in range(len(neighbours)):
+                    sum += neighbours[n]
+                mean = sum/len(neighbours)
+                finalHazard = rawHazards[r][c] * 0.5 + mean * 0.5 
+                finalHazard = round(finalHazard,4)
+                finalHazards.append(finalHazard)
+                neighbours.clear()
+        return(finalHazards)
+
 

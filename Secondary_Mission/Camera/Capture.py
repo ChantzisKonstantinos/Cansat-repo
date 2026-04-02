@@ -3,7 +3,6 @@ from libcamera import Transform
 from PIL import Image
 import time
 
-
 class CameraObj:
     def __init__(self):
         self.cam = Picamera2()
@@ -18,7 +17,6 @@ class CameraObj:
         img = Image.fromarray(image)
         img.save("angel.jpg", format="JPEG")
         return image
-
     def StopCamera(self):
         self.cam.stop()
 
